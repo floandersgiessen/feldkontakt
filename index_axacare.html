@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#173d32">
+<title>Feldkontakt – Akquise-Prototyp</title>
+<style>
+:root{--green:#07566b;--green2:#087f8c;--mint:#e3f3f5;--ink:#1d2d33;--muted:#60737a;--line:#d7e3e6;--bg:#f4f8f9;--white:#fff;--orange:#b95d18;--orangebg:#fff1e5;--red:#a53a35}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:var(--green);color:#fff;padding:18px 16px 16px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0001}
+.headrow{display:flex;justify-content:space-between;align-items:center;gap:10px}h1{font-size:21px;margin:0;font-weight:750}header p{margin:4px 0 0;color:#d9edf0;font-size:13px}
+.pill{font-size:11px;border:1px solid #9eb9ad;border-radius:999px;padding:4px 8px;white-space:nowrap}
+nav{display:flex;gap:6px;margin-top:14px}nav button{flex:1;background:#ffffff18;color:#e7f1ec;border:1px solid #ffffff30;border-radius:10px;padding:10px 5px;font-weight:650;font-size:13px}nav button.active{background:#fff;color:var(--green)}
+main{max-width:780px;margin:0 auto;padding:16px 14px 90px}.view{display:none}.view.active{display:block}
+h2{font-size:20px;margin:4px 0 6px}h3{font-size:16px;margin:0 0 8px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.stat,.panel,.record{background:var(--white);border:1px solid var(--line);border-radius:15px;padding:14px}
+.stat .num{font-size:26px;font-weight:800;color:var(--green)}.stat .label{font-size:12px;color:var(--muted)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px}
+button{font:inherit;cursor:pointer}.primary,.secondary,.danger,.smallbtn{border-radius:11px;padding:12px 14px;font-weight:700;border:1px solid transparent}
+.primary{background:var(--green);color:white}.primary:disabled{opacity:.45;cursor:not-allowed}.secondary{background:var(--mint);color:var(--green);border-color:#c3e0e5}.danger{background:#fff0ef;color:var(--red);border-color:#f0c8c5}.smallbtn{padding:8px 10px;background:#f2f6f3;color:var(--green);border-color:var(--line);font-size:13px}
+.full{width:100%}.row{display:flex;gap:8px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+label{display:block;font-size:13px;font-weight:700;margin:13px 0 5px}input,textarea,select{font:inherit;width:100%;padding:11px 12px;border:1px solid #cbd7d0;border-radius:10px;background:#fff;color:var(--ink);min-height:44px}textarea{min-height:90px;resize:vertical}input:focus,textarea:focus,select:focus{outline:2px solid #6dbac5;border-color:var(--green)}
+.fieldnote{font-size:12px;color:var(--muted);margin-top:5px}.warning{padding:10px 12px;border-radius:10px;background:var(--orangebg);color:#794314;font-size:13px;margin:10px 0}.ok{padding:10px 12px;border-radius:10px;background:var(--mint);color:var(--green);font-size:13px;margin:10px 0}
+.list{display:grid;gap:9px;margin-top:12px}.record h3{margin:0}.record p{font-size:13px;color:var(--muted);margin:5px 0}.badge{font-size:11px;font-weight:700;background:var(--mint);color:var(--green);padding:4px 7px;border-radius:999px;display:inline-block}.badge.orange{background:var(--orangebg);color:#794314}
+.record .buttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.hidden{display:none!important}.coords{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow-wrap:anywhere}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 8px}.empty{padding:22px 12px;text-align:center;color:var(--muted);border:1px dashed #bdcbc3;border-radius:12px}
+footer{position:fixed;bottom:0;left:0;right:0;background:#fffffff2;border-top:1px solid var(--line);padding:8px 14px calc(8px + env(safe-area-inset-bottom));text-align:center;font-size:11px;color:var(--muted);backdrop-filter:blur(10px)}
+#toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);background:#1d2d33;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;z-index:20;display:none;max-width:90vw}
+@media(min-width:650px){main{padding-top:22px}.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.actions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="headrow"><div><h1>AXACARE · Feldkontakt</h1><p>Mobile Neukundenakquise · Prototyp</p></div><span class="pill">PROTOTYP</span></div>
+  <nav>
+    <button class="active" data-tab="start">Start</button>
+    <button data-tab="visit">Besuch erfassen</button>
+    <button data-tab="businesses">Betriebe</button>
+    <button data-tab="office">Backoffice</button>
+  </nav>
+</header>
+<main>
+<section id="start" class="view active">
+  <h2>Guten Tag</h2><p class="sub">Betriebe vor Ort erfassen, Gespräche dokumentieren und später zentral auswerten.</p>
+  <div class="cards">
+    <div class="stat"><div class="num" id="statBusinesses">0</div><div class="label">Betriebe erfasst</div></div>
+    <div class="stat"><div class="num" id="statVisits">0</div><div class="label">Besuche dokumentiert</div></div>
+    <div class="stat"><div class="num" id="statFollow">0</div><div class="label">Wiedervorlagen offen</div></div>
+    <div class="stat"><div class="num" id="statNew">0</div><div class="label">Neue Betriebe</div></div>
+  </div>
+  <div class="actions">
+    <button class="primary" onclick="newVisit()">＋ Besuch dokumentieren</button>
+    <button class="secondary" onclick="showTab('businesses')">⌕ Betrieb suchen</button>
+  </div>
+  <div class="panel">
+    <div class="row between"><h3>Letzte Besuche</h3><button class="smallbtn" onclick="showTab('office')">Alle ansehen</button></div>
+    <div id="recentVisits" class="list"></div>
+  </div>
+  <div class="warning">Prototyp-Hinweis: Daten werden nur in diesem Browser auf diesem Gerät gespeichert. Noch keine zentrale Synchronisierung mit SharePoint.</div>
+</section>
+
+<section id="visit" class="view">
+  <h2>Besuch dokumentieren</h2><p class="sub">Koordinaten sind Pflicht. Bitte Standort vor dem Speichern erfassen.</p>
+  <form id="visitForm">
+    <div class="panel">
+      <h3>1. Betrieb zuordnen</h3>
+      <label for="businessSearch">Bestehenden Betrieb suchen</label>
+      <input id="businessSearch" placeholder="Name, Ort oder Ansprechpartner suchen" autocomplete="off">
+      <div id="businessMatches" class="list"></div>
+      <div class="row between" style="margin-top:10px"><span class="fieldnote" id="selectedBusiness">Noch kein Betrieb ausgewählt</span><button type="button" class="smallbtn" onclick="toggleNewBusiness()">＋ Neuer Betrieb</button></div>
+      <div id="newBusinessFields" class="hidden">
+        <hr><h3>Neuen Betrieb anlegen</h3>
+        <label for="newName">Betriebsname *</label><input id="newName" placeholder="z. B. Hof am Berg">
+        <label for="newContact">Ansprechpartner</label><input id="newContact" placeholder="Name (optional)">
+        <label for="newPhone">Telefon</label><input id="newPhone" type="tel" placeholder="Optional">
+        <label for="newAddress">Anschrift / Beschreibung</label><input id="newAddress" placeholder="Ort, Zufahrt oder Beschreibung">
+        <label for="newType">Beziehung zum Betrieb</label>
+        <select id="newType"><option value="Interessent">Interessent</option><option value="Unbekannt">Noch ungeklärt</option></select>
+        <button type="button" class="secondary full" style="margin-top:12px" onclick="createBusiness()">Betrieb anlegen und auswählen</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:12px">
+      <h3>2. Besuchsstandort *</h3>
+      <p class="fieldnote">Der Standort des tatsächlichen Besuchs ist Pflicht – auch wenn keine eindeutige Postanschrift existiert.</p>
+      <button type="button" class="primary full" style="margin-top:10px" onclick="captureGPS()">◎ Aktuellen GPS-Standort erfassen</button>
+      <div id="gpsStatus" class="warning">Noch keine Koordinate erfasst.</div>
+      <div class="row">
+        <div style="flex:1"><label for="lat">Breitengrad *</label><input id="lat" inputmode="decimal" placeholder="Noch nicht erfasst"></div>
+        <div style="flex:1"><label for="lon">Längengrad *</label><input id="lon" inputmode="decimal" placeholder="Noch nicht erfasst"></div>
+      </div>
+      <label for="gpsSource">Standortquelle</label><select id="gpsSource"><option value="GPS">GPS / Gerätestandort</option><option value="Manuell">Manuell korrigiert</option></select>
+      <p class="fieldnote">Wenn GPS nicht verfügbar ist, kannst du Koordinaten manuell eintragen. Die Quelle muss dann auf „Manuell korrigiert“ stehen.</p>
+    </div>
+    <div class="panel" style="margin-top:12px">
+      <h3>3. Gespräch dokumentieren</h3>
+      <label for="outcome">Gesprächsergebnis *</label>
+      <select id="outcome" required>
+        <option value="">Bitte auswählen</option><option>Entscheider nicht angetroffen</option><option>Kein Interesse</option><option>Interesse vorhanden</option><option>Unterlagen gewünscht</option><option>Rückruf vereinbart</option><option>Folgetermin vereinbart</option><option>Bestandskunde / bereits bekannt</option><option>Sonstiges</option>
+      </select>
+      <label for="notes">Gesprächsnotiz *</label><textarea id="notes" required placeholder="Worum ging es? Was wurde besprochen?"></textarea>
+      <label for="nextStep">Nächster Schritt</label><textarea id="nextStep" placeholder="z. B. Informationsmaterial senden, Rückruf, Angebot erstellen"></textarea>
+      <div class="row">
+        <div style="flex:1"><label for="followDate">Wiedervorlage</label><input id="followDate" type="date"></div>
+        <div style="flex:1"><label for="visitDate">Besuchsdatum</label><input id="visitDate" type="date" required></div>
+      </div>
+      <label for="driver">Erfasst von</label><input id="driver" value="Testfahrer">
+    </div>
+    <button class="primary full" style="margin-top:14px" type="submit">Besuch speichern</button>
+    <button class="secondary full" style="margin-top:8px" type="button" onclick="resetVisit()">Formular zurücksetzen</button>
+  </form>
+</section>
+
+<section id="businesses" class="view">
+  <h2>Betriebe</h2><p class="sub">Bestehende Betriebe finden und deren Besuchshistorie ansehen.</p>
+  <label for="businessFilter">Suche</label><input id="businessFilter" placeholder="Name, Ort, Ansprechpartner …">
+  <div id="businessList" class="list"></div>
+</section>
+
+<section id="office" class="view">
+  <h2>Backoffice</h2><p class="sub">Besuche, Gesprächsergebnisse und Wiedervorlagen auswerten.</p>
+  <div class="panel">
+    <label for="outcomeFilter">Nach Gesprächsergebnis filtern</label>
+    <select id="outcomeFilter"><option value="">Alle Ergebnisse</option><option>Entscheider nicht angetroffen</option><option>Kein Interesse</option><option>Interesse vorhanden</option><option>Unterlagen gewünscht</option><option>Rückruf vereinbart</option><option>Folgetermin vereinbart</option><option>Bestandskunde / bereits bekannt</option><option>Sonstiges</option></select>
+    <label for="followFilter">Wiedervorlagen</label><select id="followFilter"><option value="">Alle Besuche</option><option value="open">Mit offener Wiedervorlage</option><option value="overdue">Überfällige Wiedervorlage</option></select>
+    <div class="row wrap" style="margin-top:12px">
+      <button class="secondary" onclick="exportJSON()">Daten exportieren (JSON)</button>
+      <button class="secondary" onclick="exportCSV()">Besuche exportieren (CSV)</button>
+    </div>
+    <label for="importFile">Testdaten importieren (JSON)</label><input id="importFile" type="file" accept=".json,application/json">
+    <p class="fieldnote">Import ersetzt die vorhandenen lokalen Testdaten. Exportiere vorher eine Sicherung.</p>
+  </div>
+  <div class="sectionhead"><h3>Besuchsprotokolle</h3><span id="visitCountLabel" class="badge">0</span></div>
+  <div id="officeVisits" class="list"></div>
+  <hr>
+  <div class="sectionhead"><h3>Datensicherung / Testdaten</h3></div>
+  <div class="row wrap">
+    <button class="smallbtn" onclick="loadDemo()">Beispieldaten laden</button>
+    <button class="danger" onclick="clearAll()">Alle lokalen Daten löschen</button>
+  </div>
+</section>
+</main>
+<footer>Feldkontakt · Funktionsprototyp · Keine zentrale Synchronisierung · Keine echten Kundendaten verwenden</footer>
+<div id="toast"></div>
+<script>
+const STORE='feldkontakt-prototype-v1';
+let db={businesses:[],visits:[]}, selectedBusinessId=null, currentGPS=null;
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+function uid(prefix){return prefix+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function load(){try{const x=localStorage.getItem(STORE);if(x)db=JSON.parse(x)}catch(e){toast('Lokaler Speicher ist nicht verfügbar.')}render()}
+function save(){localStorage.setItem(STORE,JSON.stringify(db));render()}
+function toast(s){const t=$('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+function showTab(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));if(id==='visit')renderMatches();render()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function newVisit(){resetVisit();showTab('visit')}
+function toggleNewBusiness(){ $('newBusinessFields').classList.toggle('hidden') }
+function businessName(id){return db.businesses.find(b=>b.id===id)?.name||'Unbekannter Betrieb'}
+function createBusiness(){
+ const name=$('newName').value.trim();if(!name){toast('Bitte einen Betriebsnamen eingeben.');return}
+ const b={id:uid('B'),name,contact:$('newContact').value.trim(),phone:$('newPhone').value.trim(),address:$('newAddress').value.trim(),status:$('newType').value,createdAt:new Date().toISOString()};
+ db.businesses.push(b);selectedBusinessId=b.id;$('selectedBusiness').textContent='Ausgewählt: '+b.name;$('newBusinessFields').classList.add('hidden');$('businessSearch').value='';$('newName').value='';$('newContact').value='';$('newPhone').value='';$('newAddress').value='';save();renderMatches();toast('Betrieb angelegt und ausgewählt.')
+}
+function renderMatches(){
+ const q=($('businessSearch')?.value||'').toLowerCase().trim();
+ const list=db.businesses.filter(b=>!q||(b.name+' '+b.address+' '+b.contact).toLowerCase().includes(q)).slice(0,8);
+ $('businessMatches').innerHTML=list.length?list.map(b=>`<div class="record"><div class="row between"><div><h3>${esc(b.name)}</h3><p>${esc([b.address,b.contact].filter(Boolean).join(' · ')||'Keine weiteren Angaben')}</p></div><button class="smallbtn" onclick="selectBusiness('${b.id}')">Auswählen</button></div></div>`).join(''):'<div class="fieldnote">Keine passenden Betriebe gefunden. Du kannst einen neuen Betrieb anlegen.</div>';
+}
+function selectBusiness(id){selectedBusinessId=id;const b=db.businesses.find(x=>x.id===id);$('selectedBusiness').textContent='Ausgewählt: '+b.name;$('businessSearch').value=b.name;renderMatches();toast('Betrieb ausgewählt.')}
+$('businessSearch').addEventListener('input',renderMatches);
+function captureGPS(){
+ $('gpsStatus').className='warning';$('gpsStatus').textContent='Standort wird ermittelt …';
+ if(!navigator.geolocation){$('gpsStatus').textContent='Dieser Browser unterstützt keine Standortermittlung. Koordinaten manuell eintragen.';$('gpsSource').value='Manuell';return}
+ navigator.geolocation.getCurrentPosition(pos=>{
+  const c=pos.coords;currentGPS={lat:c.latitude,lon:c.longitude,accuracy:c.accuracy,at:new Date().toISOString(),source:'GPS'};
+  $('lat').value=c.latitude.toFixed(6);$('lon').value=c.longitude.toFixed(6);$('gpsSource').value='GPS';
+  $('gpsStatus').className='ok';$('gpsStatus').textContent=`Standort erfasst · Genauigkeit ca. ${Math.round(c.accuracy)} m · ${new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}`;
+ },err=>{$('gpsStatus').className='warning';$('gpsStatus').textContent=({1:'Standortfreigabe verweigert. Bitte Berechtigung erlauben oder Koordinaten manuell eintragen.',2:'Standort derzeit nicht verfügbar. Bitte erneut versuchen oder manuell eintragen.',3:'Standortermittlung dauerte zu lange. Bitte erneut versuchen.'}[err.code]||'Standort konnte nicht ermittelt werden.');$('gpsSource').value='Manuell'},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+}
+$('gpsSource').addEventListener('change',()=>{if($('gpsSource').value==='Manuell'&&currentGPS){currentGPS=null;$('gpsStatus').className='warning';$('gpsStatus').textContent='Manuelle Koordinaten: bitte Position prüfen.'}});
+function validCoords(){
+ const lat=Number(String($('lat').value).replace(',','.')),lon=Number(String($('lon').value).replace(',','.'));
+ return $('lat').value.trim()!==''&&$('lon').value.trim()!==''&&Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=-90&&lat<=90&&lon>=-180&&lon<=180?{lat,lon}:null
+}
+$('visitForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!selectedBusinessId){toast('Bitte einen bestehenden oder neuen Betrieb auswählen.');return}
+ const coords=validCoords();if(!coords){toast('GPS-Koordinaten sind Pflicht. Bitte Standort erfassen.');$('gpsStatus').className='warning';$('gpsStatus').textContent='Besuch kann ohne gültige Koordinaten nicht gespeichert werden.';return}
+ if(!$('outcome').value||!$('notes').value.trim()){toast('Bitte Gesprächsergebnis und Gesprächsnotiz ausfüllen.');return}
+ const visit={id:uid('V'),businessId:selectedBusinessId,date:$('visitDate').value||today(),createdAt:new Date().toISOString(),driver:$('driver').value.trim()||'Nicht angegeben',lat:coords.lat,lon:coords.lon,accuracy:currentGPS&&$('gpsSource').value==='GPS'?currentGPS.accuracy:null,locationSource:$('gpsSource').value,outcome:$('outcome').value,notes:$('notes').value.trim(),nextStep:$('nextStep').value.trim(),followDate:$('followDate').value,status:'Neu'};
+ db.visits.push(visit);
+ const b=db.businesses.find(x=>x.id===selectedBusinessId);if(b){b.lastVisit=visit.date;if(!b.firstVisit)b.firstVisit=visit.date}
+ save();toast('Besuch gespeichert.');resetVisit();showTab('start')
+});
+function resetVisit(){selectedBusinessId=null;currentGPS=null;$('visitForm').reset();$('visitDate').value=today();$('driver').value='Testfahrer';$('selectedBusiness').textContent='Noch kein Betrieb ausgewählt';$('gpsStatus').className='warning';$('gpsStatus').textContent='Noch keine Koordinate erfasst.';$('newBusinessFields').classList.add('hidden');renderMatches()}
+function mapUrl(v){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(v.lat+','+v.lon)}&travelmode=driving`}
+function visitCard(v,office=false){
+ const b=db.businesses.find(x=>x.id===v.businessId);const follow=v.followDate?`<span class="badge ${v.followDate<today()?'orange':''}">Wiedervorlage: ${esc(v.followDate)}</span>`:'';
+ return `<div class="record"><div class="row between"><h3>${esc(b?.name||'Betrieb nicht gefunden')}</h3><span class="badge">${esc(v.status||'Neu')}</span></div><p>${esc(v.date)} · ${esc(v.outcome)}</p><p>${esc(v.notes)}</p>${v.nextStep?`<p><b>Nächster Schritt:</b> ${esc(v.nextStep)}</p>`:''}<p class="coords">${Number(v.lat).toFixed(6)}, ${Number(v.lon).toFixed(6)} · ${esc(v.locationSource||'')} ${v.accuracy?`· ±${Math.round(v.accuracy)} m`:''}</p>${follow}<div class="buttons"><button class="smallbtn" onclick="openMap('${v.id}')">Route / Karte</button>${office?`<button class="smallbtn" onclick="markProcessed('${v.id}')">${v.status==='Bearbeitet'?'Bearbeitet':'Als bearbeitet markieren'}</button>`:''}<button class="smallbtn" onclick="showBusiness('${v.businessId}')">Betriebshistorie</button></div></div>`
+}
+function openMap(id){const v=db.visits.find(x=>x.id===id);if(v)window.open(mapUrl(v),'_blank','noopener')}
+function markProcessed(id){const v=db.visits.find(x=>x.id===id);if(v){v.status='Bearbeitet';save();toast('Besuch als bearbeitet markiert.')}}
+function showBusiness(id){showTab('businesses');$('businessFilter').value='';renderBusinesses();const b=db.businesses.find(x=>x.id===id);if(b){$('businessFilter').value=b.name;renderBusinesses()}}
+function renderBusinesses(){
+ const q=($('businessFilter').value||'').toLowerCase().trim();const list=db.businesses.filter(b=>(b.name+' '+b.address+' '+b.contact).toLowerCase().includes(q));
+ $('businessList').innerHTML=list.length?list.map(b=>{const vs=db.visits.filter(v=>v.businessId===b.id).sort((a,c)=>c.date.localeCompare(a.date));return `<div class="record"><div class="row between"><h3>${esc(b.name)}</h3><span class="badge">${esc(b.status||'Interessent')}</span></div><p>${esc([b.address,b.contact].filter(Boolean).join(' · ')||'Keine Anschrift hinterlegt')}</p><p>${vs.length} Besuch(e) · Letzter Besuch: ${esc(vs[0]?.date||'–')}</p><div class="buttons"><button class="smallbtn" onclick="startVisitFor('${b.id}')">Besuch erfassen</button>${vs[0]?`<button class="smallbtn" onclick="openMap('${vs[0].id}')">Letzten Standort öffnen</button>`:''}</div>${vs.length?`<details style="margin-top:10px"><summary>Besuchshistorie anzeigen</summary><div class="list">${vs.map(v=>visitCard(v,false)).join('')}</div></details>`:''}</div>`}).join(''):'<div class="empty">Keine Betriebe gefunden. Du kannst über „Besuch erfassen“ einen neuen Betrieb anlegen.</div>'
+}
+function startVisitFor(id){newVisit();selectBusiness(id)}
+$('businessFilter').addEventListener('input',renderBusinesses);
+$('outcomeFilter').addEventListener('change',renderOffice);$('followFilter').addEventListener('change',renderOffice);
+function renderOffice(){
+ const outcome=$('outcomeFilter').value,follow=$('followFilter').value;
+ let vs=[...db.visits].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).filter(v=>(!outcome||v.outcome===outcome)&&(!follow||(follow==='open'?v.followDate&&v.status!=='Bearbeitet':v.followDate&&v.followDate<today()&&v.status!=='Bearbeitet')));
+ $('visitCountLabel').textContent=vs.length;
+ $('officeVisits').innerHTML=vs.length?vs.map(v=>visitCard(v,true)).join(''):'<div class="empty">Keine passenden Besuchsprotokolle vorhanden.</div>'
+}
+function render(){
+ $('statBusinesses').textContent=db.businesses.length;$('statVisits').textContent=db.visits.length;$('statFollow').textContent=db.visits.filter(v=>v.followDate&&v.status!=='Bearbeitet').length;$('statNew').textContent=db.businesses.filter(b=>b.status==='Interessent'||b.status==='Unbekannt').length;
+ const recent=[...db.visits].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,3);
+ $('recentVisits').innerHTML=recent.length?recent.map(v=>visitCard(v,false)).join(''):'<div class="empty">Noch keine Besuche. Starte mit „Besuch dokumentieren“.</div>';
+ renderBusinesses();renderOffice();
+}
+function exportJSON(){
+ const blob=new Blob([JSON.stringify({format:'Feldkontakt JSON',version:1,exportedAt:new Date().toISOString(),...db},null,2)],{type:'application/json'});downloadBlob(blob,'feldkontakt-sicherung-'+today()+'.json')
+}
+function exportCSV(){
+ const rows=[['Besuchs-ID','Betriebs-ID','Betrieb','Datum','Fahrer','Breitengrad','Längengrad','Genauigkeit_m','Standortquelle','Ergebnis','Notiz','Nächster Schritt','Wiedervorlage','Status']];
+ db.visits.forEach(v=>rows.push([v.id,v.businessId,businessName(v.businessId),v.date,v.driver,v.lat,v.lon,v.accuracy??'',v.locationSource,v.outcome,v.notes,v.nextStep,v.followDate,v.status]));
+ const csv='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'feldkontakt-besuche-'+today()+'.csv')
+}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.businesses)||!Array.isArray(data.visits))throw Error();if(!confirm('Vorhandene lokale Testdaten durch importierte Daten ersetzen?'))return;db={businesses:data.businesses,visits:data.visits};save();toast('Daten importiert.')}catch(err){toast('Import fehlgeschlagen: ungültige JSON-Datei.')}e.target.value=''});
+function loadDemo(){
+ if(db.businesses.length||db.visits.length){if(!confirm('Beispieldaten ergänzen? Bereits vorhandene Daten bleiben erhalten.'))return}
+ const b1={id:uid('B'),name:'Hof Sonnenhöhe (Beispiel)',contact:'Max Mustermann',phone:'',address:'Beispielort · Zufahrt über Feldweg',status:'Interessent',createdAt:new Date().toISOString()};
+ const b2={id:uid('B'),name:'Landwirtschaft Beispielhof',contact:'Erika Musterfrau',phone:'',address:'Anschrift noch zu prüfen',status:'Unbekannt',createdAt:new Date().toISOString()};
+ db.businesses.push(b1,b2);
+ db.visits.push({id:uid('V'),businessId:b1.id,date:today(),createdAt:new Date().toISOString(),driver:'Testfahrer',lat:50.5621,lon:8.5032,accuracy:18,locationSource:'GPS (Beispiel)',outcome:'Rückruf vereinbart',notes:'Beispielprotokoll – keine realen Kundendaten. Interesse an weiterem Austausch.',nextStep:'Informationsmaterial vorbereiten und Rückruf abstimmen.',followDate:today(),status:'Neu'});
+ save();toast('Fiktive Beispieldaten geladen.')
+}
+function clearAll(){if(confirm('Wirklich alle lokalen Betriebe und Besuche auf diesem Gerät löschen?')){db={businesses:[],visits:[]};save();resetVisit();toast('Lokale Daten gelöscht.')}}
+$('visitDate').value=today();load();
+</script>
+</body>
+</html>
